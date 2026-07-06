@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campus Portal</title>
+    <link rel="stylesheet" href="/home.css">
+</head>
+
+<body>
+
+    <div class="ticker-wrap">
+        <div class="ticker-content">
+            <% if(tickerNotices && tickerNotices.length> 0) { %>
+                <% tickerNotices.forEach(notice=> { %>
+                    ⚠️ [ALERT]: <%= notice.title %>
+                        <% }) %>
+                            <% } else { %>
+                                ⚠️ NOTICE: Check your personalized dashboards to track administrative deadlines, profile
+                                updates, and active internal rosters.
+                                <% } %>
+        </div>
+    </div>
+
+    <nav class="navbar">
+        <div class="LogoDiv">
+            <a href="/"><img src="/Assets/logo.png" alt="logo" height="35px" width="45px"></a>
+            <span>CampusOrbit</span>
+        </div>
+
+        <ul class="navList">
+
+            <a href="<%= user ? '/' + user.role + '/timetable' : '/login' %>">
+                <li>TIMETABLE MATRIX</li>
+            </a>
+
+            <a href="<%= user ? '/' + user.role + '/attendance' : '/login' %>">
+                <li>ATTENDANCE METRICS</li>
+            </a>
+
+            <a
+                href="<%= user ? (user.role === 'admin' ? '/admin/dashboard' : '/' + user.role + '/profile') : '/login' %>">
+                <li>CAMPUS PROFILE</li>
+            </a>
+
+        </ul>
+
+        <div class="auth">
+            <% if (typeof user !=='undefined' && user !==null) { %>
+                <span style="font-size: 14px; color: #cbd5e1; align-self: center; font-weight: 500;">
+                    Logged in as: <strong style="color: #f59e0b;">
+                        <%= user.email %>
+                    </strong>
+                </span>
+                <a href="/logout" class="btn-nav login-btn" style="border-color: #ef4444; color: #fca5a5;">LOG OUT</a>
+                <% } else { %>
+                    <a href="/login" class="btn-nav login-btn">SIGN IN</a>
+                    <a href="/signup" class="btn-nav signup-btn">REGISTER</a>
+                    <% } %>
+        </div>
+    </nav>
+
+
+
+    <div class="main-layout">
+
+        <div class="announcements-wrapper">
+            <div class="section-title">📌 Campus Notices & Updates</div>
+
+            <% if(boardNotices && boardNotices.length> 0) { %>
+                <% boardNotices.forEach(notice=> { %>
+                    <div class="notice-item">
+                        <span class="notice-date">
+                            <%= notice.createdAt.toDateString() %>
+                        </span>
+                        <div class="notice-title">
+                            <%= notice.title %>
+                        </div>
+                        <div class="notice-desc">
+                            <%= notice.description || 'No further details provided.' %>
+                        </div>
+                        <small style="color: #94a3b8; font-size: 11px; display: block; margin-top: 4px;">Posted by: <%=
+                                notice.createdBy %></small>
+
+                        <% if (user && (user.role==='admin' || (user.role==='faculty' &&
+                            notice.createdBy===user.email))) { %>
+                            <div class="inline-controls">
+                                <a href="/campus/delete-notice/<%= notice._id %>" class="inline-btn inline-del">Delete
+                                    Notice</a>
+                            </div>
+                            <% } %>
+                    </div>
+                    <% }) %>
+                        <% } else { %>
+                            <div class="notice-item">
+                                <div class="notice-title">No Active Logs</div>
+                                <div class="notice-desc">Campus environment registries are tracking empty
+                                    configurations.</div>
+                            </div>
+                            <% } %>
+        </div>
+
+
+        <div class="quick-links-panel">
+            <div class="panel-title">Campus Resources</div>
+
+            <a href="/campus/marketplace" class="link-row-item marketplace">
+                <span>🛒 Peer-to-Peer Marketplace</span>
+                <span class="arrow-icon">→</span>
+            </a>
+
+            <a href="/campus/notes" class="link-row-item vault">
+                <span>📚 Digital Study Notes Repository</span>
+                <span class="arrow-icon">→</span>
+            </a>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>

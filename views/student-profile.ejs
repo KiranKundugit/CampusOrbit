@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Student Profile Matrix</title>
+    <link rel="stylesheet" href="/dashboard.css">
+</head>
+<body>
+    <div class="dashboard-wrapper">
+        <aside class="sidebar student-theme">
+            <h2>Campus Portal</h2>
+            <nav>
+                <a href="/student/profile" class="active">My Profile Matrix</a>
+                <a href="/student/timetable">Student Timetable</a>
+                <a href="/student/attendance">My Attendance</a>
+                <a href="/campus/marketplace">Sell & Rent Items</a>
+                <a href="/campus/notes">Notes Repository</a>
+                
+                <a href="/logout" class="logout-btn">Log Out</a>
+            </nav>
+        </aside>
+        <main class="content-area">
+            <header>
+                <h1>Verified Student Information Matrix</h1>
+                <p class="user-badge"><%= email %></p>
+            </header>
+
+            <section class="management-section">
+                <h3>Core Identity & Academic Record</h3>
+                <table class="profile-matrix-table">
+                    <tbody>
+                        <tr>
+                            <td class="matrix-label">University ID</td>
+                            <td class="matrix-value"><code><%= student.universityId %></code></td>
+                            <td class="matrix-label">Account Role</td>
+                            <td class="matrix-value"><span class="status-badge status-active">STUDENT</span></td>
+                        </tr>
+                        <tr>
+                            <td class="matrix-label">Full Name</td>
+                            <td class="matrix-value"><strong><%= student.name || 'Not Provided' %></strong></td>
+                            <td class="matrix-label">Registered Email</td>
+                            <td class="matrix-value"><%= student.email %></td>
+                        </tr>
+                        <tr>
+                            <td class="matrix-label">Assigned Course</td>
+                            <td class="matrix-value"><strong><%= student.course %></strong></td>
+                            <td class="matrix-label">Current Semester</td>
+                            <td class="matrix-value">Semester <%= student.semester || '1' %></td>
+                        </tr>
+                        <tr>
+                            <td class="matrix-label">Joining Batch Year</td>
+                            <td class="matrix-value"><%= student.batchYear || '2026' %></td>
+                            <td class="matrix-label">System Record Status</td>
+                            <td class="matrix-value"><span class="status-badge" style="background:#d1fae5; color:#065f46;">Verified Active</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p class="matrix-footer-note">* This information is managed by the system administrator. To modify any incorrect details, please raise a ticket with support.</p>
+            </section>
+        </main>
+    </div>
+</body>
+</html>

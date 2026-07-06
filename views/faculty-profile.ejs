@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Faculty Profile Matrix</title>
+    <link rel="stylesheet" href="/dashboard.css">
+</head>
+<body>
+    <div class="dashboard-wrapper">
+        <aside class="sidebar faculty-theme">
+            <h2>Faculty Portal</h2>
+            <nav>
+                <a href="/faculty/profile" class="active">My Profile Matrix</a>
+                <a href="/faculty/timetable">Timetable Matrix</a>
+                <a href="/faculty/attendance">Roster Rollcall</a>
+                <a href="/campus/create-notice" style="background: #b45309; color: white; border-radius: 4px; padding: 5px 10px; text-align: center; margin-top: 10px;">📢 Create Notice</a>
+                
+                <a href="/logout" class="logout-btn">Log Out</a>
+            </nav>
+        </aside>
+        <main class="content-area">
+            <header>
+                <h1>Official Faculty Information Matrix</h1>
+                <p class="user-badge"><%= email %></p>
+            </header>
+
+            <section class="management-section">
+                <h3>Instructor Credentials & Department Records</h3>
+                <table class="profile-matrix-table">
+                    <tbody>
+                        <tr>
+                            <td class="matrix-label">Faculty Employee ID</td>
+                            <td class="matrix-value"><code><%= faculty.universityId %></code></td>
+                            <td class="matrix-label">Account Security Level</td>
+                            <td class="matrix-value"><span class="status-badge" style="background:#edf2f7; color:#2d3748;">INSTRUCTOR</span></td>
+                        </tr>
+                        <tr>
+                            <td class="matrix-label">Instructor Name</td>
+                            <td class="matrix-value"><strong><%= faculty.name || 'Professor' %></strong></td>
+                            <td class="matrix-label">Official Email</td>
+                            <td class="matrix-value"><%= faculty.email %></td>
+                        </tr>
+                        <tr>
+                            <td class="matrix-label">Primary Department</td>
+                            <td class="matrix-value"><strong><%= faculty.department || 'Computer Science & IT' %></strong></td>
+                            <td class="matrix-label">Designation Designation</td>
+                            <td class="matrix-value"><%= faculty.designation || 'Assistant Professor' %></td>
+                        </tr>
+                        <tr>
+                            <td class="matrix-label">Office Room Location</td>
+                            <td class="matrix-value">Block <%= faculty.officeLocation || 'N/A' %></td>
+                            <td class="matrix-label">Employment Status</td>
+                            <td class="matrix-value"><span class="status-badge" style="background:#d1fae5; color:#065f46;">Full-Time Permanent</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p class="matrix-footer-note">* Notice: These are read-only database records. Any internal restructuring adjustments must be cleared directly by the Admin Control Room.</p>
+            </section>
+        </main>
+    </div>
+</body>
+</html>

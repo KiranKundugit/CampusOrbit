@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>My Attendance Ledger</title>
+    <link rel="stylesheet" href="/dashboard.css">
+    <style>th, td { padding: 6px; text-align: center; border: 1px solid #cbd5e1; }</style>
+</head>
+<body>
+    <div class="dashboard-wrapper">
+        <aside class="sidebar student-theme">
+            <h2>Campus Portal</h2>
+            <nav>
+                <a href="/student/profile">My Profile Matrix</a>
+                <a href="/student/timetable">Student Timetable</a>
+                <a href="/student/attendance" class="active">My Attendance</a>
+                <a href="/campus/marketplace">Sell & Rent Items</a>
+                <a href="/campus/notes">Notes Repository</a>
+
+                <a href="/logout" class="logout-btn">Log Out</a>
+            </nav>
+        </aside>
+        <main class="content-area">
+            <header><h1>My Attendance Log Sheets</h1></header>
+
+            <section class="cards-student-grid" style="grid-template-columns: 1fr 3fr;">
+                <div class="metric-card chart-box">
+                    <h3>My Monthly Summary</h3>
+                
+                    <div class="percentage-circle student">
+                        <span>
+                            <%= rate %>%
+                        </span>
+                        <small>Attendance</small>
+                    </div>
+                </div>
+
+
+                <div class="management-section" style="margin:0;">
+                    <form method="GET" action="/student/attendance" style="margin-bottom:15px; display:flex; gap:10px;">
+                        <input type="hidden" name="email" value="<%= email %>">
+                        <input type="month" name="month" value="<%= targetMonth %>" onchange="this.form.submit()">
+                    </form>
+                    <div class="table-scroll" style="overflow-x:auto;">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Student ID</th><th>Course</th>
+                                    <% for(let d=1; d<=totalDays; d++) { %><th><%= d %></th><% } %>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong><%= student.universityId %></strong></td>
+                                    <td><span class="status-badge"><%= student.course %></span></td>
+                                    <% for(let d=1; d<=totalDays; d++) { 
+                                        let dayKey = d.toString().padStart(2, '0');
+                                        let dayStatus = statusMap[dayKey];
+                                    %>
+                                        <td style="background: '<%= dayStatus==='Present'?'#d1fae5':dayStatus==='Absent'?'#fee2e2':'#f1f5f9' %>'">
+                                            <%= dayStatus === 'Present' ? 'P' : dayStatus === 'Absent' ? 'A' : '-' %>
+                                        </td>
+                                    <% } %>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+</body>
+</html>

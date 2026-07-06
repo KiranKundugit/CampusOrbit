@@ -1,0 +1,238 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+body {
+    background-color: #f1f5f9;
+    color: #1e293b;
+    padding-bottom: 50px;
+}
+
+/* HEADER BRANDING BANNER */
+.vault-header {
+    background: #0f172a;
+    color: white;
+    padding: 20px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 4px solid #3b82f6;
+}
+
+.vault-header h1 {
+    font-size: 24px;
+    color: #3b82f6;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.back-home {
+    color: #cbd5e1;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 6px 12px;
+    border: 1px solid #475569;
+    border-radius: 4px;
+}
+
+.back-home:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: white;
+}
+
+/* GRID MAIN BODY WRAPPER */
+.vault-container {
+    max-width: 1300px;
+    margin: 30px auto;
+    padding: 0 20px;
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    gap: 30px;
+}
+
+/* LEFT SIDEBAR: UPLOAD REGISTRATION CONSOLE */
+.upload-panel {
+    background: white;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    height: fit-content;
+    border-top: 4px solid #3b82f6;
+}
+
+.upload-panel h3 {
+    margin-bottom: 15px;
+    font-size: 18px;
+    color: #0f172a;
+}
+
+.form-group {
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.form-group label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #475569;
+}
+
+.form-group input,
+.form-group select {
+    padding: 8px 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.submit-upload-btn {
+    background: #3b82f6;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s;
+    margin-top: 5px;
+}
+
+.submit-upload-btn:hover {
+    background: #2563eb;
+}
+
+/* RIGHT PANEL: RENDERING FILES */
+.display-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.semester-filter-bar {
+    display: flex;
+    gap: 10px;
+    background: white;
+    padding: 12px 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+    overflow-x: auto;
+}
+
+.sem-link {
+    padding: 6px 14px;
+    text-decoration: none;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: bold;
+    color: #64748b;
+    background: #f8fafc;
+    transition: all 0.2s;
+}
+
+.sem-link:hover {
+    background: #e2e8f0;
+}
+
+.sem-link.active {
+    background: #3b82f6;
+    color: white;
+}
+
+/* DOCUMENT CARDS GRID LAYOUT */
+.documents-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.doc-card {
+    background: white;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.doc-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+}
+
+.doc-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.sem-badge {
+    font-size: 11px;
+    font-weight: 800;
+    padding: 3px 8px;
+    border-radius: 12px;
+    background: #dbeafe;
+    color: #1e40af;
+    text-transform: uppercase;
+}
+
+.subject-tag {
+    font-size: 13px;
+    font-weight: 700;
+    color: #64748b;
+    text-transform: uppercase;
+}
+
+.doc-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: #0f172a;
+    line-height: 1.4;
+}
+
+.uploader-info {
+    font-size: 11px;
+    color: #94a3b8;
+    margin-top: -5px;
+}
+
+.download-btn {
+    background: #f1f5f9;
+    color: #1e293b;
+    text-align: center;
+    padding: 10px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 14px;
+    margin-top: auto;
+    border: 1px solid #e2e8f0;
+    transition: all 0.2s;
+}
+
+.download-btn:hover {
+    background: #3b82f6;
+    color: white;
+    border-color: #3b82f6;
+}
+
+.delete-doc {
+    text-align: center;
+    color: #ef4444;
+    font-size: 12px;
+    text-decoration: none;
+    font-weight: bold;
+    margin-top: 5px;
+}
+
+.delete-doc:hover {
+    text-decoration: underline;
+}

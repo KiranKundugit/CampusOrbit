@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Institutional Login</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <div class="form-container">
+        <h2>Portal Sign-In</h2>
+        <% if (error) { %> <p class="error-msg"><%= error %></p> <% } %>
+        <% if (message) { %> <p class="success-msg"><%= message %></p> <% } %>
+        
+        <form action="/login" method="POST">
+            <input type="text" name="universityId" placeholder="Enter University ID" required>
+            <input type="password" name="password" placeholder="Enter Password" required>
+            <button type="submit">Sign In</button>
+        </form>
+        <p>First time user? <a href="/signup">Activate account</a></p>
+    </div>
+</body>
+</html>

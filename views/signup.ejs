@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Institutional Portal Signup</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <div class="form-container">
+        <h2>Account Activation</h2>
+        <% if (error) { %> <p class="error-msg"><%= error %></p> <% } %>
+        
+        <form action="/signup" method="POST">
+            <input type="text" name="universityId" placeholder="Enter University ID (e.g., STU1001, FAC5001)" required>
+            <input type="email" name="email" placeholder="Enter Registered Email" required>
+            <input type="password" name="password" placeholder="Create Secret Password" required>
+            <button type="submit">Verify & Register</button>
+        </form>
+        <p>Already configured? <a href="/login">Login here</a></p>
+    </div>
+</body>
+</html>

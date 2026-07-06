@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Student Timetable</title>
+    <link rel="stylesheet" href="/dashboard.css">
+</head>
+<body>
+    <div class="dashboard-wrapper">
+        <aside class="sidebar student-theme">
+            <h2>Campus Portal</h2>
+            <nav>
+                <a href="/student/profile>">My Profile Matrix</a>
+                <a href="/student/timetable>" class="active">Student Timetable</a>
+                <a href="/student/attendance>">My Attendance</a>
+                <a href="/campus/marketplace">Sell & Rent Items</a>
+                <a href="/campus/notes">Notes Repository</a>
+
+                <a href="/logout" class="logout-btn">Log Out</a>
+            </nav>
+        </aside>
+        <main class="content-area">
+            <header>
+                <h1>My Class Schedule Matrix</h1>
+                <p class="user-badge"><%= email %></p>
+            </header>
+            <section class="management-section">
+                <h3>Weekly Classes</h3>
+                <table>
+                    <thead><tr><th>Day</th><th>Time Slot</th><th>Subject</th><th>Room Location</th></tr></thead>
+                    <tbody>
+                        <% if(schedule.length === 0) { %> <tr><td colspan="4">No classes scheduled yet for your stream.</td></tr> <% } %>
+                        <% schedule.forEach(slot => { %>
+                            <tr>
+                                <td><strong><%= slot.day %></strong></td>
+                                <td><%= slot.time %></td>
+                                <td><%= slot.subject %></td>
+                                <td><span class="status-badge status-active"><%= slot.room %></span></td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            </section>
+        </main>
+    </div>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Admin Control Panel</title>
+    <link rel="stylesheet" href="/dashboard.css">
+</head>
+<body>
+    <div class="dashboard-wrapper">
+        <aside class="sidebar admin-theme">
+            <h2>System Control</h2>
+            <nav>
+                <a href="/admin/dashboard" class="active">Database Core</a>
+                <a href="/admin/timetable">Timetable Editor</a>
+                <a href="/admin/attendance">Attendance Engine</a>
+                <a href="/campus/create-notice" style="background: #b45309; color: white; border-radius: 4px; padding: 5px 10px; text-align: center; margin-top: 10px;">📢 Create Notice</a>
+                <a href="/logout" class="logout-btn">Log Out</a>
+            </nav>
+        </aside>
+        <main class="content-area">
+            <header><h1>Admin Access Database Management</h1></header>
+            <section class="management-section">
+                <h3>New Institutional Record</h3>
+                <form action="/admin/add" method="POST" class="inline-add-form">
+                    <input type="text" name="universityId" placeholder="ID (e.g., STU1005)" required>
+                    <input type="email" name="email" placeholder="Email" required>
+                    <select name="role" required>
+                        <option value="student">Student</option>
+                        <option value="faculty">Faculty</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                    <select name="course">
+                        <option value="N/A">Course Option (Not a Student)</option>
+                        <option value="B.Tech">B.Tech</option><option value="BCA">BCA</option><option value="BA">BA</option><option value="B.COM">B.COM</option><option value="M.Tech">M.Tech</option><option value="MCA">MCA</option><option value="MA">MA</option><option value="MSC">MSC</option><option value="BSC">BSC</option>
+                    </select>
+                    <button type="submit" class="btn btn-create">Add to Roster</button>
+                </form>
+            </section>
+            <section class="management-section">
+                <h3>Active Network Roster</h3>
+                <table>
+                    <thead><tr><th>University ID</th><th>Email Base</th><th>Role</th><th>Course</th><th>Actions</th></tr></thead>
+                    <tbody>
+                        <% users.forEach(user => { %>
+                            <tr>
+                                <td><strong><%= user.universityId %></strong><input type="hidden" name="universityId" value="<%= user.universityId %>" form="form-<%= user.universityId %>"></td>
+                                <td><input type="email" name="email" value="<%= user.email %>" class="table-input" form="form-<%= user.universityId %>"></td>
+                                <td>
+                                    <select name="role" class="table-select" form="form-<%= user.universityId %>">
+                                        <option value="student" <%= user.role==='student'?'selected':'' %>>Student</option>
+                                        <option value="faculty" <%= user.role==='faculty'?'selected':'' %>>Faculty</option>
+                                        <option value="admin" <%= user.role==='admin'?'selected':'' %>>Admin</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select name="course" class="table-select" form="form-<%= user.universityId %>">
+                                        <option value="N/A" <%= user.course === 'N/A'?'selected':'' %>>N/A</option>
+                                        <option value="B.Tech" <%= user.course === 'B.Tech'?'selected':'' %>>B.Tech</option><option value="BCA" <%= user.course === 'BCA'?'selected':'' %>>BCA</option><option value="BA" <%= user.course === 'BA'?'selected':'' %>>BA</option><option value="B.COM" <%= user.course === 'B.COM'?'selected':'' %>>B.COM</option><option value="M.Tech" <%= user.course === 'M.Tech'?'selected':'' %>>M.Tech</option><option value="MCA" <%= user.course === 'MCA'?'selected':'' %>>MCA</option><option value="MA" <%= user.course === 'MA'?'selected':'' %>>MA</option><option value="MSC" <%= user.course === 'MSC'?'selected':'' %>>MSC</option><option value="BSC" <%= user.course === 'BSC'?'selected':'' %>>BSC</option>
+                                    </select>
+                                </td>
+                                <td class="action-buttons">
+                                    <form action="/admin/update" method="POST" id="form-<%= user.universityId %>"><button type="submit" class="btn btn-save">Save</button></form>
+                                    <form action="/admin/delete/<%= user._id %>" method="POST" style="display:inline;"><button type="submit" class="btn btn-delete">Delete</button></form>
+                                </td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            </section>
+        </main>
+    </div>
+</body>
+</html>

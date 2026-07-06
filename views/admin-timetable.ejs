@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Admin Timetable Control</title>
+    <link rel="stylesheet" href="/dashboard.css">
+</head>
+<body>
+    <div class="dashboard-wrapper">
+        <aside class="sidebar admin-theme">
+            <h2>System Control</h2>
+            <nav>
+                <a href="/admin/dashboard">Database Core</a>
+                <a href="/admin/timetable" class="active">Timetable Editor</a>
+                <a href="/admin/attendance">Attendance Engine</a>
+                <a href="/campus/create-notice" style="background: #b45309; color: white; border-radius: 4px; padding: 5px 10px; text-align: center; margin-top: 10px;">📢 Create Notice</a>
+                <a href="/logout" class="logout-btn">Log Out</a>
+            </nav>
+        </aside>
+        <main class="content-area">
+            <header><h1>Global Schedule Editor</h1></header>
+            <section class="management-section">
+                <h3>Modify Schedules & Assign Instructors</h3>
+                <form action="/admin/timetable/update" method="POST" class="inline-add-form">
+                    <select name="roleTarget" required>
+                        <option value="student">Student Group</option>
+                        <option value="faculty">Faculty Slot</option>
+                    </select>
+                    <select name="course" required>
+                        <option value="B.Tech">B.Tech</option><option value="BCA">BCA</option><option value="BA">BA</option><option value="B.COM">B.COM</option><option value="M.Tech">M.Tech</option><option value="MCA">MCA</option><option value="MA">MA</option><option value="MSC">MSC</option><option value="BSC">BSC</option>
+                    </select>
+                    <select name="facultyId" required>
+                        <option value="">-- Assign Faculty ID --</option>
+                        <% facultyList.forEach(fac => { %>
+                            <option value="<%= fac.universityId %>"><%= fac.universityId %> (<%= fac.email %>)</option>
+                        <% }) %>
+                    </select>
+                    <select name="day" required>
+                        <option value="Monday">Monday</option><option value="Tuesday">Tuesday</option><option value="Wednesday">Wednesday</option><option value="Thursday">Thursday</option><option value="Friday">Friday</option>
+                    </select>
+                    <input type="text" name="time" placeholder="Time (e.g., 10:00 AM)" required>
+                    <input type="text" name="subject" placeholder="Subject Name" required>
+                    <input type="text" name="room" placeholder="Room No." required>
+                    <button type="submit" class="btn btn-create" style="background:#2c3e50;">Save Assignment</button>
+                </form>
+            </section>
+            <section class="management-section">
+                <h3>Master Schedule Log</h3>
+                <table>
+                    <thead><tr><th>Target</th><th>Course Group</th><th>Faculty ID</th><th>Day / Time</th><th>Subject</th><th>Room</th></tr></thead>
+                    <tbody>
+                        <% schedule.forEach(slot => { %>
+                            <tr>
+                                <td><span class="status-badge status-active"><%= slot.roleTarget.toUpperCase() %></span></td>
+                                <td><strong><%= slot.course %></strong></td>
+                                <td><code><%= slot.facultyId %></code></td>
+                                <td><%= slot.day %> (<%= slot.time %>)</td>
+                                <td><%= slot.subject %></td>
+                                <td><%= slot.room %></td>
+
+                                <td class="action-buttons">
+                                    <form action="/admin/timetable/delete/<%= slot._id %>" method="POST" style="display:inline;">
+                                        <button type="submit" class="btn btn-delete"
+                                            onclick="return confirm('Permanently delete this timetable entry?')">Delete</button>
+                                    </form>
+                                </td>
+
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            </section>
+        </main>
+    </div>
+</body>
+</html>

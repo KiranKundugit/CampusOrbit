@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notes Vault | Campus Document Share</title>
+    <link rel="stylesheet" href="/notes-vault.css">
+</head>
+<body>
+
+    <header class="vault-header">
+        <h1>📚 Campus Share Repository</h1>
+        <a href="/" class="back-home">← Back to Main Framework</a>
+    </header>
+
+    <div class="vault-container">
+        
+        <aside class="upload-panel">
+            <h3>Share Documents</h3>
+            <form action="/campus/notes/upload" method="POST">
+                <div class="form-group">
+                    <label>Resource Title / Topic Name</label>
+                    <input type="text" name="title" required placeholder="Unit 3 Redux State Notes, midsem prep...">
+                </div>
+                <div class="form-group">
+                    <label>Subject / Course Name</label>
+                    <input type="text" name="subject" required placeholder="Advanced Full-Stack, Java...">
+                </div>
+                <div class="form-group">
+                    <label>Target Semester</label>
+                    <select name="semester">
+                        <option value="Semester 1">Semester 1</option>
+                        <option value="Semester 2">Semester 2</option>
+                        <option value="Semester 3">Semester 3</option>
+                        <option value="Semester 4">Semester 4</option>
+                        <option value="Semester 5">Semester 5</option>
+                        <option value="Semester 6">Semester 6</option>
+                        <option value="Semester 7">Semester 7</option>
+                        <option value="Semester 8">Semester 8</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Document Resource URL Link</label>
+                    <input type="url" name="documentUrl" required placeholder="Paste Google Drive or OneDrive public link">
+                </div>
+                <button type="submit" class="submit-upload-btn">Upload to Vault</button>
+            </form>
+        </aside>
+
+        <main class="display-panel">
+            
+            <div class="semester-filter-bar">
+                <a href="/campus/notes?semester=all" class="sem-link <%= currentSemester === 'all' ? 'active' : '' %>">All Semesters</a>
+                <% for(let i=1; i<=8; i++) { %>
+                    <a href="/campus/notes?semester=Semester <%= i %>" class="sem-link <%= currentSemester === 'Semester ' + i ? 'active' : '' %>">Sem <%= i %></a>
+                <% } %>
+            </div>
+
+            <div class="documents-grid">
+                <% if(notes && notes.length > 0) { %>
+                    <% notes.forEach(note => { %>
+                        <div class="doc-card">
+                            <div class="doc-meta">
+                                <span class="subject-tag"><%= note.subject %></span>
+                                <span class="sem-badge"><%= note.semester %></span>
+                            </div>
+                            
+                            <div class="doc-title"><%= note.title %></div>
+                            <div class="uploader-info">Uploaded by: <code><%= note.uploadedBy %></code></div>
+                            
+                            <a href="<%= note.documentUrl %>" target="_blank" class="download-btn">📖 Access Document File</a>
+
+                            <% if(user && (user.role === 'admin' || user.email === note.uploadedBy)) { %>
+                                <a href="/campus/notes/delete/<%= note._id %>" class="delete-doc" onclick="return confirm('Permanently wipe this document link from the database registry?')">Remove Document</a>
+                            <% } %>
+                        </div>
+                    <% }) %>
+                <% } else { %>
+                    <div style="grid-column: 1/-1; text-align: center; padding: 50px; color: #94a3b8; background: white; border-radius: 8px;">
+                        No document links have been logged for this semester track selection parameters yet.
+                    </div>
+                <% } %>
+            </div>
+
+        </main>
+    </div>
+
+</body>
+</html>

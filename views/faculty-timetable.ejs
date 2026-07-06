@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Faculty Timetable</title>
+    <link rel="stylesheet" href="/dashboard.css">
+</head>
+<body>
+    <div class="dashboard-wrapper">
+        <aside class="sidebar faculty-theme">
+            <h2>Faculty Portal</h2>
+            <nav>
+                <a href="/faculty/profile>">My Profile Matrix</a>
+                <a href="/faculty/timetable>" class="active">Timetable Matrix</a>
+                <a href="/faculty/attendance>">Roster Rollcall</a>
+                <a href="/campus/create-notice" style="background: #b45309; color: white; border-radius: 4px; padding: 5px 10px; text-align: center; margin-top: 10px;">📢 Create Notice</a>
+
+                <a href="/logout" class="logout-btn">Log Out</a>
+            </nav>
+        </aside>
+        <main class="content-area">
+            <header>
+                <h1>Schedules and Assignments</h1>
+                <p class="user-badge"><%= email %></p>
+            </header>
+            <section class="management-section">
+                <h3>My Teaching Schedule (Personal View)</h3>
+                <table>
+                    <thead><tr><th>Day</th><th>Time</th><th>Target Stream</th><th>Topic/Subject</th><th>Classroom</th></tr></thead>
+                    <tbody>
+                        <% if(facultySchedule.length === 0) { %> <tr><td colspan="5">No assigned lectures.</td></tr> <% } %>
+                        <% facultySchedule.forEach(slot => { %>
+                            <tr><td><%= slot.day %></td><td><%= slot.time %></td><td><strong><%= slot.course %></strong></td><td><%= slot.subject %></td><td><span class="status-badge status-active"><%= slot.room %></span></td></tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            </section>
+        </main>
+    </div>
+</body>
+</html>

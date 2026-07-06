@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Admin Master Attendance System</title>
+    <link rel="stylesheet" href="/dashboard.css">
+    
+</head>
+<body>
+    <div class="dashboard-wrapper">
+        <aside class="sidebar admin-theme">
+            <h2>System Control</h2>
+            <nav>
+                <a href="/admin/dashboard">Database Core</a>
+                <a href="/admin/timetable">Timetable Editor</a>
+                <a href="/admin/attendance" class="active">Attendance Engine</a>
+                <a href="/campus/create-notice" style="background: #b45309; color: white; border-radius: 4px; padding: 5px 10px; text-align: center; margin-top: 10px;">📢 Create Notice</a>
+                <a href="/logout" class="logout-btn">Log Out</a>
+            </nav>
+        </aside>
+        <main class="content-area">
+            <header><h1>Global Enterprise Attendance Panel</h1></header>
+
+            <section class="cards-grid" style="grid-template-columns: 1fr 1fr;">
+            
+                <div class="metric-card chart-box">
+                    <h3>Global Faculty Tracker</h3>
+            
+                    <div class="percentage-circle faculty">
+                        <%= facRate %>%
+                            <small>Faculty</small>
+                    </div>
+            
+                </div>
+            
+                <div class="metric-card chart-box">
+                    <h3>Global Student Tracker</h3>
+            
+                    <div class="percentage-circle student">
+                        <%= stuRate %>%
+                            <small>Students</small>
+                    </div>
+            
+                </div>
+            
+            </section>
+
+            <section class="management-section">
+                <h3>Global Configuration Scope Filters</h3>
+                <form method="GET" action="/admin/attendance" style="display:flex; gap:10px; margin-bottom:15px;">
+                    <input type="month" name="month" value="<%= targetMonth %>">
+                    <select name="course" onchange="this.form.submit()">
+                        <% ['B.Tech','BCA','BA','B.COM','M.Tech','MCA','MA','MSC','BSC'].forEach(c => { %>
+                            <option value="<%= c %>" <%= targetCourse===c?'selected':'' %>><%= c %></option>
+                        <% }) %>
+                    </select>
+                    <button type="submit" class="btn btn-save" style="padding:5px 20px;">Load Matrix Layouts</button>
+                </form>
+
+                <div class="admin-section-header">EDIT STUDENT MATRIX LOGS (<%= targetCourse %>)</div>
+                <div class="table-scroll" style="overflow-x:auto; background:white; padding:10px; border-radius:4px;">
+                    <table>
+                        <thead>
+                            <tr><th>UID</th><th>Course</th><% for(let d=1; d<=totalDays; d++) { %><th><%= d %></th><% } %></tr>
+                        </thead>
+                        <tbody>
+                            <% students.forEach(stu => { %>
+                                <tr class="target-row" data-uid="<%= stu.universityId %>" data-role="student" data-course="<%= stu.course %>">
+                                    <td><strong><%= stu.universityId %></strong></td>
+                                    <td><%= stu.course %></td>
+                                    <% for(let d=1; d<=totalDays; d++) { 
+                                        let dayKey = d.toString().padStart(2, '0');
+                                        let currentStatus = globalStatusMap[`${stu.universityId}-${dayKey}`];
+                                    %>
+                                        <td><input type="checkbox" class="matrix-box" data-day="<%= d %>" <%= currentStatus==='Present'?'checked':'' %>></td>
+                                    <% } %>
+                                </tr>
+                            <% }) %>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="admin-section-header">EDIT FACULTY MASTER MATRIX LOGS</div>
+                <div class="table-scroll" style="overflow-x:auto; background:white; padding:10px; border-radius:4px; margin-top:10px;">
+                    <table>
+                        <thead>
+                            <tr><th>Faculty UID</th><th>Role</th><% for(let d=1; d<=totalDays; d++) { %><th><%= d %></th><% } %></tr>
+                        </thead>
+                        <tbody>
+                            <% faculty.forEach(fac => { %>
+                                <tr class="target-row" data-uid="<%= fac.universityId %>" data-role="faculty" data-course="N/A">
+                                    <td><code><%= fac.universityId %></code></td>
+                                    <td>Faculty</td>
+                                    <% for(let d=1; d<=totalDays; d++) { 
+                                        let dayKey = d.toString().padStart(2, '0');
+                                        let currentStatus = globalStatusMap[`${fac.universityId}-${dayKey}`];
+                                    %>
+                                        <td><input type="checkbox" class="matrix-box" data-day="<%= d %>" <%= currentStatus==='Present'?'checked':'' %>></td>
+                                    <% } %>
+                                </tr>
+                            <% }) %>
+                        </tbody>
+                    </table>
+                </div>
+
+                <form action="/attendance/matrix/save" method="POST" id="adminSaveForm" style="margin-top:15px;">
+                    <input type="hidden" name="targetMonth" value="<%= targetMonth %>">
+                    <input type="hidden" name="userRole" id="adminTargetRole" value="student">
+                    <input type="hidden" name="course" value="<%= targetCourse %>">
+                    <input type="hidden" name="attendanceData" id="adminJsonField">
+                    <input type="hidden" name="redirectUrl" value="/admin/attendance?month=<%= targetMonth %>&course=<%= targetCourse %>">
+                    <button type="button" class="btn btn-create" onclick="commitAdminChanges()" style="background:#0f172a;">Save Global Modifications</button>
+                </form>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        function commitAdminChanges() {
+            const updates = [];
+            document.querySelectorAll('.target-row').forEach(row => {
+                const uid = row.getAttribute('data-uid');
+                const role = row.getAttribute('data-role');
+                const course = row.getAttribute('data-course');
+                row.querySelectorAll('.matrix-box').forEach(box => {
+                    updates.push({
+                        userRefId: uid,
+                        userRole: role,
+                        course: course,
+                        day: box.getAttribute('data-day'),
+                        status: box.checked ? 'Present' : 'Absent'
+                    });
+                });
+            });
+            document.getElementById('adminJsonField').value = JSON.stringify(updates);
+            document.getElementById('adminSaveForm').submit();
+        }
+    </script>
+</body>
+</html>

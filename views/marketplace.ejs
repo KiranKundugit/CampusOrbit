@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campus Bazaar | Peer Marketplace</title>
+    <link rel="stylesheet" href="/marketplace.css">
+</head>
+<body>
+
+    <header class="market-header">
+        <h1>🛒 Campus Peer Bazaar</h1>
+        <a href="/" class="back-home">← Back to Main Framework</a>
+    </header>
+
+    <div class="market-container">
+        
+        <aside class="listing-panel">
+            <h3>List a Resource</h3>
+            <form action="/campus/marketplace/list" method="POST">
+                <div class="form-group">
+                    <label>Item Name / Title</label>
+                    <input type="text" name="title" required placeholder="Lab coat, Engineering graphics set...">
+                </div>
+                <div class="form-group">
+                    <label>Transaction Type</label>
+                    <select name="purpose" id="purposeSelect" onchange="toggleRentPeriod()">
+                        <option value="sell">Outright Sale</option>
+                        <option value="rent">Peer Rental Space</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Price (₹)</label>
+                    <input type="number" name="price" required placeholder="Amount in INR">
+                </div>
+                <div class="form-group" id="rentPeriodGroup" style="display: none;">
+                    <label>Rental Valuation Window</label>
+                    <select name="timePeriod">
+                        <option value="per Day">per Day</option>
+                        <option value="per Week">per Week</option>
+                        <option value="per Semester">per Semester</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Short Condition Description</label>
+                    <textarea name="description" rows="4" required placeholder="Mention usage wear, size details, book edition tags..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Payment number</label>
+                    <input type="text" name="pay" required placeholder="Google-Pay number">
+                </div>
+                <button type="submit" class="submit-list-btn">Publish to Hub Grid</button>
+            </form>
+        </aside>
+
+        <main class="showcase-panel">
+            
+            <div class="filter-bar">
+                <a href="/campus/marketplace" class="filter-link <%= currentFilter === 'all' ? 'active' : '' %>">All Items</a>
+                <a href="/campus/marketplace?filter=sell" class="filter-link <%= currentFilter === 'sell' ? 'active' : '' %>">For Sale</a>
+                <a href="/campus/marketplace?filter=rent" class="filter-link <%= currentFilter === 'rent' ? 'active' : '' %>">To Rent</a>
+            </div>
+
+            <div class="bazaar-grid">
+                <% if(items && items.length > 0) { %>
+                    <% items.forEach(item => { %>
+                        <div class="item-card">
+                            <div class="card-body">
+                                <div class="badge-row">
+                                    <span class="purpose-badge <%= item.purpose === 'sell' ? 'badge-sell' : 'badge-rent' %>">
+                                        <%= item.purpose %>
+                                    </span>
+                                    <span class="item-price">
+                                        ₹<%= item.price %>
+                                        <% if(item.purpose === 'rent') { %>
+                                            <span class="rent-period"> / <%= item.timePeriod %></span>
+                                        <% } %>
+                                    </span>
+                                </div>
+                                
+                                <div class="item-title"><%= item.title %></div>
+                                <div class="item-desc"><%= item.description %></div>
+
+                                <div class="item-desc"><b>Payment number:</b> <%= item.pay %></div>
+
+                                <div class="contact-box">
+                                    📬 Contact Peer: <strong><%= item.contactEmail %></strong>
+                                </div>
+
+                                <% if(user && (user.role === 'admin' || user.email === item.contactEmail)) { %>
+                                    <a href="/campus/marketplace/delete/<%= item._id %>" class="delete-listing" onclick="return confirm('Drop this active product listing matrix entry?')">Remove Listing</a>
+                                <% } %>
+                            </div>
+                        </div>
+                    <% }) %>
+                <% } else { %>
+                    <div style="grid-column: 1/-1; text-align: center; padding: 50px; color: #94a3b8; background: white; border-radius: 8px;">
+                        No peer transactions are logged inside this sub-category block right now.
+                    </div>
+                <% } %>
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+        function toggleRentPeriod() {
+            const select = document.getElementById('purposeSelect');
+            const group = document.getElementById('rentPeriodGroup');
+            group.style.display = select.value === 'rent' ? 'flex' : 'none';
+        }
+    </script>
+</body>
+</html>

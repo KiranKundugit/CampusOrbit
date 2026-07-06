@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Create Announcement Directive</title>
+    <link rel="stylesheet" href="/dashboard.css">
+    <link rel="stylesheet" href="/home.css">
+</head>
+<body>
+    <div class="notice-form-container">
+        <h2>Broadcast New Campus Communication</h2>
+        <p style="color: #64748b; margin-bottom: 20px;">Posting as: <strong><%= user.email %> (<%= user.role.toUpperCase() %>)</strong></p>
+        
+        <form action="/campus/save-notice" method="POST">
+            <div class="form-group">
+                <label>Announcement Headline / Title</label>
+                <input type="text" name="title" required placeholder="e.g., Database Server Sync Schedule">
+            </div>
+            
+            <div class="form-group">
+                <label>Display Target Area</label>
+                <select name="displayType">
+                    <option value="board">Notice Board Column Card (With Details & Dates)</option>
+                    <option value="ticker">Running Top Line Marquee (Emergency Bulletins)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Detailed Description (Only shown for Notice Board updates)</label>
+                <textarea name="description" rows="5" placeholder="Enter full announcement metrics contextual details..."></textarea>
+            </div>
+
+            <button type="submit" class="submit-btn">Publish Live Update</button>
+        </form>
+    </div>
+</body>
+</html>

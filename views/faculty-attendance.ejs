@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Faculty Matrix Rollcall</title>
+    <link rel="stylesheet" href="/dashboard.css">
+    <style>th, td { padding: 4px; text-align: center; border: 1px solid #cbd5e1; font-size:12px; }</style>
+</head>
+<body>
+    <div class="dashboard-wrapper">
+        <aside class="sidebar faculty-theme">
+            <h2>Faculty Portal</h2>
+            <nav>
+                <a href="/faculty/profile">My Profile Matrix</a>
+                <a href="/faculty/timetable">Timetable Matrix</a>
+                <a href="/faculty/attendance" class="active">Roster Rollcall</a>
+                <a href="/campus/create-notice" style="background: #b45309; color: white; border-radius: 4px; padding: 5px 10px; text-align: center; margin-top: 10px;">📢 Create Notice</a>
+                
+                <a href="/logout" class="logout-btn">Log Out</a>
+            </nav>
+        </aside>
+        <main class="content-area">
+            <header><h1>Academic Rollcall Ledger Control</h1></header>
+
+            <section class="cards-grid" style="grid-template-columns: 1fr 1fr;">
+            
+                <div class="metric-card chart-box">
+                    <h3>My Personal Attendance View</h3>
+            
+                    <div class="percentage-circle faculty">
+                        <span>
+                            <%= facRate %>%
+                        </span>
+                        <small>Faculty Attendance</small>
+                    </div>
+            
+                </div>
+            
+                <div class="metric-card chart-box">
+                    <h3>Active Student Metrics</h3>
+            
+                    <div class="percentage-circle student">
+                        <span>
+                            <%= stuRate %>%
+                        </span>
+                        <small>Student Attendance</small>
+                    </div>
+            
+                </div>
+            
+            </section>
+
+            <section class="management-section">
+                <h3>Perform Batch Student Rollcall Operations</h3>
+                <form method="GET" action="/faculty/attendance" style="margin-bottom:15px; display:flex; gap:10px;">
+                    <input type="hidden" name="email" value="<%= email %>">
+                    <input type="month" name="month" value="<%= targetMonth %>">
+                    <select name="course" onchange="this.form.submit()">
+                        <% ['B.Tech','BCA','BA','B.COM','M.Tech','MCA','MA','MSC','BSC'].forEach(c => { %>
+                            <option value="<%= c %>" <%= targetCourse===c?'selected':'' %>><%= c %></option>
+                        <% }) %>
+                    </select>
+                    <button type="submit" class="btn btn-save" style="padding: 5px 15px;">Filter</button>
+                </form>
+
+                <div class="table-scroll" style="overflow-x:auto;">
+                    <table>
+                        <thead>
+                            <tr><th>Student ID</th><th>Stream</th><% for(let d=1; d<=totalDays; d++) { %><th><%= d %></th><% } %></tr>
+                        </thead>
+                        <tbody>
+                            <% students.forEach(stu => { %>
+                                <tr data-uid="<%= stu.universityId %>" data-course="<%= stu.course %>">
+                                    <td><strong><%= stu.universityId %></strong></td>
+                                    <td><%= stu.course %></td>
+                                    <% for(let d=1; d<=totalDays; d++) { 
+                                        let dayKey = d.toString().padStart(2, '0');
+                                        let currentStatus = globalStatusMap[`${stu.universityId}-${dayKey}`];
+                                    %>
+                                        <td>
+                                            <input type="checkbox" class="attendance-check" data-day="<%= d %>" <%= currentStatus === 'Present' ? 'checked' : '' %>>
+                                        </td>
+                                    <% } %>
+                                </tr>
+                            <% }) %>
+                        </tbody>
+                    </table>
+                </div>
+                <form action="/attendance/matrix/save" method="POST" id="submissionPayloadForm" style="margin-top:15px;">
+                    <input type="hidden" name="targetMonth" value="<%= targetMonth %>">
+                    <input type="hidden" name="userRole" value="student">
+                    <input type="hidden" name="course" value="<%= targetCourse %>">
+                    <input type="hidden" name="attendanceData" id="attendanceJsonField">
+                    <input type="hidden" name="redirectUrl" value="/faculty/attendance?email=<%= email %>&month=<%= targetMonth %>&course=<%= targetCourse %>">
+                    <button type="button" class="btn btn-create" onclick="compilePayloadData()">Save Entire Student Matrix</button>
+                </form>
+            </section>
+
+            <section class="management-section">
+                <h3>My Personal Monthly Ledger Grid (Read-Only)</h3>
+                <div class="table-scroll" style="overflow-x:auto;">
+                    <table>
+                        <thead><tr><th>Faculty ID</th><th>Role</th><% for(let d=1; d<=totalDays; d++) { %><th><%= d %></th><% } %></tr></thead>
+                        <tbody>
+                            <tr>
+                                <td><code><%= faculty.universityId %></code></td>
+                                <td>Instructor</td>
+                                <% for(let d=1; d<=totalDays; d++) { 
+                                    let dayKey = d.toString().padStart(2, '0');
+                                    let dayStatus = selfStatusMap[dayKey];
+                                %>
+                                    <td style="background: '<%= dayStatus==='Present'?'#d1fae5':dayStatus==='Absent'?'#fee2e2':'#f1f5f9' %>'">
+                                        <%= dayStatus === 'Present' ? 'P' : dayStatus === 'Absent' ? 'A' : '-' %>
+                                    </td>
+                                <% } %>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        function compilePayloadData() {
+            const updates = [];
+            document.querySelectorAll('tbody tr[data-uid]').forEach(row => {
+                const uid = row.getAttribute('data-uid');
+                const course = row.getAttribute('data-course');
+                row.querySelectorAll('.attendance-check').forEach(box => {
+                    updates.push({
+                        userRefId: uid,
+                        course: course,
+                        day: box.getAttribute('data-day'),
+                        status: box.checked ? 'Present' : 'Absent'
+                    });
+                });
+            });
+            document.getElementById('attendanceJsonField').value = JSON.stringify(updates);
+            document.getElementById('submissionPayloadForm').submit();
+        }
+    </script>
+</body>
+</html>
