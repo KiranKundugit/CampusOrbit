@@ -129,7 +129,7 @@ app.get('/', async (req, res) => {
         const boardNotices = await Notice.find({ displayType: 'board' }).sort({ createdAt: -1 });
 
         // Pass the session user object (it will be undefined if no one is logged in)
-        res.render('Home', { 
+        res.render('home', { 
             tickerNotices, 
             boardNotices, 
             user: req.session.user || null 
