@@ -1,3 +1,5 @@
+require('dotenv').config(); // Load environment variables at the top
+
 const express = require('express');
 const mongoose = require('mongoose');
 const path = require("path");
@@ -11,12 +13,11 @@ const Note = require('./models/note');
 
 
 const app = express();
-const PORT = 8080;
-
+const PORT = process.env.PORT || 8080;
 
 // Configuration for cookie tracking state session engine
 app.use(session({
-    secret: 'super_secure_campus_portal_key_2026', // Secret signature key
+    secret: process.env.SESSION_SECRET || 'super_secure_campus_portal_key_2026',
     resave: false,
     saveUninitialized: false,
     cookie: { 
@@ -41,10 +42,15 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
 
 // Connect to MongoDB
-main().then(() => console.log("Success!")).catch(err => console.log(err));
+const MONGO_URI = process.env.MONGO_URI;
+
 async function main() {
-   await mongoose.connect("mongodb://127.0.0.1:27017/campus");
+    await mongoose.connect(MONGO_URI);
 }
+
+main()
+    .then(() => console.log("Successfully connected to MongoDB Atlas!"))
+    .catch(err => console.error("Database connection failure:", err));
 
 
 // Auth Routes
